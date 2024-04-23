@@ -3,8 +3,8 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'lists/:id', component: () => import('pages/ShareListPage.vue') },
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      { path: '', component: () => import('pages/IndexPage.vue'), name: 'IndexPage' },
+      { path: 'share/:userId/:listId', component: () => import('pages/ShareListPage.vue') }
     ]
   },
 

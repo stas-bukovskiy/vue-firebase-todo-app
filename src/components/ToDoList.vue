@@ -3,7 +3,7 @@
     <q-card class="q-pa-md">
       <div class="row justify-between items-end">
         <div class="text-h6 q-mb-none">{{ title }}</div>
-        <div class="q-gutter-sm" v-if="userId">
+        <div class="q-gutter-sm" v-if="isOwner">
           <q-btn outline label="Copy Share Link" icon="content_copy" @click="copyShareLink"/>
           <q-btn outline label="Delete List" color="negative" @click="deleteList(listId)"/>
         </div>
@@ -21,7 +21,7 @@
 
     <!-- New Task Modal -->
     <q-dialog v-model="isDialogOpen" persistent>
-      <q-card>
+      <q-card style="width: 500px">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">Create New Task</div>
           <q-space/>
@@ -30,9 +30,9 @@
 
         <q-card-section>
           <q-form @submit.prevent="addNewTask">
-            <q-input filled v-model="newTaskDescription" label="Task Title" required autofocus/>
-            <div class="q-mt-md">
-              <q-btn label="Add Task" type="submit" color="primary" class="full-width"/>
+            <q-input outlined v-model="newTaskDescription" label="Task Title" required autofocus/>
+            <div class="q-mt-md row justify-center">
+              <q-btn label="Add Task" type="submit" color="primary"/>
             </div>
           </q-form>
         </q-card-section>
@@ -49,9 +49,10 @@ import {onValue, push, ref as dbRef, remove, update} from 'firebase/database';
 
 const props = defineProps({
   id: String,
-  userId: {
-    type: String,
-    default: null
+  userId: String,
+  isOwner: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -72,7 +73,8 @@ onValue(taskRef, snapshot => {
 });
 
 function copyShareLink() {
-  navigator.clipboard.writeText(window.location.href)
+  const url = window.location.href + "share/" + encodeURIComponent(userId) + "/" + encodeURIComponent(listId);
+  navigator.clipboard.writeText(url)
     .then(() => $q.notify({type: 'positive', message: 'Link copied to clipboard!'}))
     .catch(() => $q.notify({type: 'negative', message: 'Failed to copy link.'}));
 }
