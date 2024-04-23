@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
-import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import store from "src/store";
 
 /*
  * If not building with SSR mode, you can
@@ -21,7 +22,6 @@ export default route(function (/* { store, ssrContext } */) {
       history: createHistory(process.env.VUE_ROUTER_BASE)
     });
 
-    return Router;
   Router.beforeEach((to, from, next) => {
     const isAuthenticated = store.getters['user/isAuthenticated']; // Assume you have an isAuthenticated getter in your auth module
 

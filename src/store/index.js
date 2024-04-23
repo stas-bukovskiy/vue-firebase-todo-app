@@ -28,8 +28,9 @@
 
 // src/store/index.js
 
-import {firebaseAuth} from "boot/firebase";
+import {auth} from "boot/firebase";
 import {createStore} from 'vuex'
+import {useFirebaseAuth} from "vuefire";
 
 export default createStore({
   state: {
@@ -41,45 +42,50 @@ export default createStore({
     }
   },
   actions: {
-    registerUser({commit}, {email, password}) {
-      firebaseAuth.createUserWithEmailAndPassword(email, password)
-        .then(response => {
-          commit('setUser', response.user)
-          // console.log('response: ', response)
-          return response.user
-        })
-        .catch(error => {
-          console.log('error.message: ', error.message)
-        })
+    async registerUser({commit}, {email, password}) {
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password)
+        const user = userCredential.user
+        commit('setUser', user)
+        return user
+      } catch (error) {
+        console.log('error.message: ', error.message)
+        throw error
+      }
     },
     async loginUser({commit}, {email, password}) {
-      firebaseAuth.signInWithEmailAndPassword(email, password)
-        .then(response => {
-          commit('setUser', response.user)
-          // console.log('response: ', response)
-          return response.user
-        })
-        .catch(error => {
-          console.log('error.message: ', error.message)
-        })
+      try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password)
+        const user = userCredential.user
+        commit('setUser', user)
+        return user
+      } catch (error) {
+        console.log('error.message: ', error.message)
+        throw error
+      }
     },
     async logoutUser({commit}) {
-      firebaseAuth.signOut()
-        .then(() => {
-          commit('setUser', null)
-        })
-        .catch(error => {
-          console.log('error.message: ', error.message)
-        })
+      try {
+        await auth.signOut()
+        commit('setUser', null)
+      } catch (error) {
+        console.log('error.message: ', error.message)
+        throw error
+      }
     },
     async handleAuthStateChanged({commit}) {
-      firebaseAuth.onAuthStateChanged(user => {
-        if (user) {
+      try {
+        const user = await auth.currentUser
+        if(user) {
           commit('setUser', user)
         } else {
           commit('setUser', null)
         }
-      })
+        commit('setUser', user)
+      } catch (error) {
+        console.log('error.message: ', error.message)
+        throw error
+      }
     }
   },
   getters: {
