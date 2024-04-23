@@ -28,11 +28,8 @@
 
 // src/store/index.js
 
-import Vue from 'vue'
-import Vuex from 'vuex'
 import {firebaseAuth} from "boot/firebase";
 import {createStore} from 'vuex'
-import {resolve} from "@quasar/app-vite/lib/app-paths";
 
 export default createStore({
   state: {
@@ -79,7 +76,6 @@ export default createStore({
       firebaseAuth.onAuthStateChanged(user => {
         if (user) {
           commit('setUser', user)
-          resolve(user)
         } else {
           commit('setUser', null)
         }
