@@ -37,10 +37,11 @@ import ToDoList from '../components/ToDoList.vue';
 import {useQuasar} from 'quasar';
 import {db} from 'boot/firebase';
 import {onValue, push, ref as dbRef} from 'firebase/database';
+import { auth } from 'boot/firebase'; // Ensure this is the correct path to your Firebase config
 
 const $q = useQuasar();
-const userId = 'user_id_here';  // Replace with actual logic to fetch user ID
-const listsRef = dbRef(db, 'lists/' + userId);
+const userId = ref(auth.currentUser ? auth.currentUser.uid : null);
+const listsRef = dbRef(db, 'lists/' + userId.value);
 const listIds = ref([]);
 const isDialogOpen = ref(false);
 const newListTitle = ref('');
@@ -63,7 +64,7 @@ function closeDialog() {
 
 function createList() {
   if (newListTitle.value.trim()) {
-    push(listsRef, {title: newListTitle.value, userId})
+    push(listsRef, {title: newListTitle.value, userId: userId.value})
       .then(() => {
         $q.notify({type: 'positive', message: 'List created successfully!'});
         closeDialog();

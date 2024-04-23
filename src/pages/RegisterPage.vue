@@ -1,12 +1,12 @@
 <template>
-  <q-page class="row justify-center q-pa-md">
-    <q-card style="width: 350px;">
+  <q-page class="flex justify-center items-center" style="height: 100vh;">
+    <q-card style="width: 500px;" class=" q-pa-lg q-ma-lg">
       <q-card-section>
-        <div class="text-h6" style="text-align: center;">Register</div>
+        <div class="text-h5 q-mb-md" style="text-align: center;">Register a new account</div>
         <q-form @submit.prevent="handleRegister">
-          <q-input filled v-model="email" label="Email" type="email" required />
-          <q-input filled v-model="password" label="Password" type="password" required />
-          <div class="q-mt-md">
+          <q-input outlined v-model="email" label="Email" type="email" required class="q-mb-md"/>
+          <q-input outlined v-model="password" label="Password" type="password" required class="q-mb-md"/>
+          <div class="q-mt-md row justify-center">
             <q-btn label="Register" type="submit" color="primary" block />
           </div>
         </q-form>
