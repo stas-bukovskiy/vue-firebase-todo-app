@@ -22,4 +22,15 @@ export default route(function (/* { store, ssrContext } */) {
     });
 
     return Router;
+  Router.beforeEach((to, from, next) => {
+    const isAuthenticated = store.getters['user/isAuthenticated']; // Assume you have an isAuthenticated getter in your auth module
+
+    if (!to.path.startsWith('/auth') && !isAuthenticated) {
+      next('/auth/login'); // Redirect to the login page if the user is not authenticated
+    } else {
+      next(); // Proceed to the route
+    }
+  });
+
+  return Router
 })

@@ -4,7 +4,14 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue'), name: 'IndexPage' },
-      { path: 'share/:userId/:listId', component: () => import('pages/ShareListPage.vue') }
+      { path: 'share/:userId/:listId', component: () => import('pages/ShareListPage.vue') },
+      {
+        path: 'auth',
+        children: [
+          {path: 'login', component: () => import('pages/LoginPage.vue')},
+          {path: 'register', component: () => import('pages/RegisterPage.vue')},
+        ]
+      },
     ]
   },
 
