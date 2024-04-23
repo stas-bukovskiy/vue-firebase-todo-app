@@ -3,7 +3,7 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue'), name: 'IndexPage' },
+      { path: '', component: () => import('pages/IndexPage.vue'), name: 'IndexPage', meta: { requiresAuth: true } },
       { path: 'share/:userId/:listId', component: () => import('pages/ShareListPage.vue') },
       {
         path: 'auth',

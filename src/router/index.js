@@ -2,6 +2,7 @@ import { route } from 'quasar/wrappers'
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
 import store from "src/store";
+import {auth} from "boot/firebase";
 
 /*
  * If not building with SSR mode, you can
@@ -23,12 +24,16 @@ export default route(function (/* { store, ssrContext } */) {
     });
 
   Router.beforeEach((to, from, next) => {
-    const isAuthenticated = store.getters['user/isAuthenticated']; // Assume you have an isAuthenticated getter in your auth module
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const requiresGuest = to.matched.some(record => record.meta.requiresGuest);
+    const isAuthenticated = auth.currentUser;
 
-    if (!to.path.startsWith('/auth') && !isAuthenticated) {
-      next('/auth/login'); // Redirect to the login page if the user is not authenticated
+    if (requiresAuth && !isAuthenticated) {
+      next('/auth/login');
+    } else if (requiresGuest && isAuthenticated) {
+      next('/');
     } else {
-      next(); // Proceed to the route
+      next();
     }
   });
 
